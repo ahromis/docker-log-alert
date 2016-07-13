@@ -1,0 +1,93 @@
+version: '2'
+services:
+    interlock:
+      image: ehazlett/interlock:master
+      command: run -c /etc/interlock/config.toml
+      ports:
+        - 8080
+      volumes:
+        - ./config.toml:/etc/interlock/config.toml
+        - /var/run/docker.sock:/var/run/docker.sock
+    nginx:
+      image: nginx:latest
+      entrypoint: nginx
+      command: -g "daemon off;" -c /etc/nginx/nginx.conf
+      ports:
+        - 80:80
+        - 443:443
+      labels:
+        - "interlock.ext.name=nginx"
+      depends_on:
+        - interlock
+      volumes:
+        - ./ssl:/etc/nginx/ssl
+        - /var/run/docker.sock:/var/run/docker.sock
+    mongo:
+      image: "mongo:3"
+      volumes:
+        - "mongo-data:/data/db"
+    elasticsearch:
+      image: "elasticsearch:2"
+      command: "elasticsearch -Des.cluster.name='graylog'"
+      volumes:
+        - "es-data:/usr/share/elasticsearch/data"
+    graylog:
+      image: graylog2/server
+      command: -d
+      volumes:
+        - "graylog-data:/usr/share/graylog/data/journal"
+        - ./graylog/config:/usr/share/graylog/data/config
+        - ./tls/syslog:/usr/share/graylog/data/syslog
+      environment:
+        GRAYLOG_PASSWORD_SECRET: randomsalt
+        GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
+        GRAYLOG_REST_TRANSPORT_URI: http://192.168.1.199:12900
+      links:
+        - mongo:mongo
+        - elasticsearch:elasticsearch
+      depends_on:
+        - mongo
+        - elasticsearch
+      labels:
+        - "interlock.hostname=graylog"
+        - "interlock.domain=local"
+        - "interlock.ssl=true"
+        - "interlock.ssl_only=true"
+        - "interlock.ssl_cert=/etc/nginx/ssl/cert.pem"
+        - "interlock.ssl_key=/etc/nginx/ssl/key.pem"
+        - "interlock.port=9000"
+      ports:
+        - "9000:9000"
+        - "12900:12900"
+        - "12201/tcp:12201/tcp"
+        - "1514/tcp:1514/tcp"
+    app:
+      #image: ehazlett/docker-demo:latest
+      image: nginx:latest
+      logging:
+        driver: syslog
+        options:
+          syslog-address: "tcp+tls://192.168.1.199:12201"
+          syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
+          syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
+          syslog-tls-key: "/Users/ahromis/workspace/docker-demo/tls/syslog/key.pem"
+          syslog-tls-skip-verify: "true"
+          tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      ports:
+        - 8080:80
+      labels:
+        - "interlock.ssl=true"
+        - "interlock.ssl_only=true"
+        - "interlock.ssl_cert=/etc/nginx/ssl/cert.pem"
+        - "interlock.ssl_cert_key=/etc/nginx/ssl/key.pem"
+        - "interlock.port=8080"
+        - "interlock.hostname=test"
+        - "interlock.domain=local"
+
+volumes:
+    mongo-data:
+        driver: local
+    es-data:
+        driver: local
+    graylog-data:
+        driver: local
