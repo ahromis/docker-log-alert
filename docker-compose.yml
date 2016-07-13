@@ -14,11 +14,11 @@ services:
       volumes:
         - "graylog-data:/usr/share/graylog/data/journal"
         - ./graylog/config:/usr/share/graylog/data/config
-        - ./tls/syslog:/usr/share/graylog/data/syslog
+        - ./tls/syslog:/etc/tls
       environment:
         GRAYLOG_PASSWORD_SECRET: randomsalt
         GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
-        GRAYLOG_REST_TRANSPORT_URI: http://192.168.1.199:12900
+        GRAYLOG_REST_TRANSPORT_URI: http://localhost:12900
       depends_on:
         - mongo
         - elasticsearch
@@ -32,7 +32,7 @@ services:
       logging:
         driver: syslog
         options:
-          syslog-address: "tcp+tls://192.168.1.199:1514"
+          syslog-address: "tcp+tls://localhost:1514"
           syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
           syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
           syslog-tls-key: "/Users/ahromis/workspace/docker-demo/tls/syslog/key.pem"
