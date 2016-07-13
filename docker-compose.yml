@@ -1,7 +1,7 @@
 version: '2'
 services:
     mongo:
-      image: "mongo:3"
+      image: mongo:3
       volumes:
         - "mongo-data:/data/db"
     elasticsearch:
@@ -10,8 +10,7 @@ services:
       volumes:
         - "es-data:/usr/share/elasticsearch/data"
     graylog:
-      image: graylog2/server
-      command: -d
+      image: graylog2/server:latest
       volumes:
         - "graylog-data:/usr/share/graylog/data/journal"
         - ./graylog/config:/usr/share/graylog/data/config
@@ -29,12 +28,10 @@ services:
         - "12201/tcp:12201/tcp"
         - "1514/tcp:1514/tcp"
     app:
-      #image: ehazlett/docker-demo:latest
       image: nginx:latest
       logging:
         driver: syslog
         options:
-          syslog-address: "tcp://192.168.1.199:1514"
           syslog-address: "tcp+tls://192.168.1.199:1514"
           syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
           syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
