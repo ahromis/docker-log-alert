@@ -1,0 +1,37 @@
+version: '2'
+services:
+    consul:
+      build:
+          context: ./consul
+      network_mode: "host"
+      command: "agent -dev -ui -bind 127.0.0.1 -client 0.0.0.0"
+    registrator:
+      image: gliderlabs/registrator:latest
+      network_mode: "host"
+      command: "consul://localhost:8500"
+      volumes:
+        - "/var/run/docker.sock:/tmp/docker.sock"
+      depends_on:
+        - "consul"
+    app:
+      image: nginx:latest
+      environment:
+        - "SERVICE_NAME=nginx-demo"
+        - "SERVICE_80_CHECK_SCRIPT=curl --silent http://$$SERVICE_IP:$$SERVICE_PORT/status | grep OK"
+        - "SERVICE_80_CHECK_INTERVAL=10s"
+      volumes:
+        - "./nginx/status:/usr/share/nginx/html/status"
+        - "./nginx/status.html:/usr/share/nginx/html/status.html"
+      logging:
+        driver: syslog
+        options:
+          syslog-address: "tcp+tls://localhost:1514"
+          syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
+          syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
+          syslog-tls-key: "/Users/ahromis/workspace/docker-demo/tls/syslog/key.pem"
+          syslog-tls-skip-verify: "false"
+          tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      ports:
+        - 80:80
+      depends_on:
+        - "registrator"
