@@ -1,18 +1,32 @@
 {
   "extractors": [
     {
-      "title": "Request Verb",
+      "title": "HTTP Version",
       "extractor_type": "regex",
       "converters": [],
-      "order": 3,
+      "order": 5,
       "cursor_strategy": "copy",
       "source_field": "message",
-      "target_field": "request_verb",
+      "target_field": "http_version",
       "extractor_config": {
-        "regex_value": "^.*]:.+\\[.+\\] \"(\\S+)"
+        "regex_value": "^.*]:.+HTTP/(\\S+)\""
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
+    },
+    {
+      "title": "HTTP User Agent",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 8,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "http_user_agent",
+      "extractor_config": {
+        "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ \\d+ \".+?\" \"(.+?)\""
+      },
+      "condition_type": "regex",
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Remote Address",
@@ -26,7 +40,21 @@
         "regex_value": "^.*]:\\s+(\\S+)"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
+    },
+    {
+      "title": "Request Verb",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 3,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "request_verb",
+      "extractor_config": {
+        "regex_value": "^.*]:.+\\[.+\\] \"(\\S+)"
+      },
+      "condition_type": "regex",
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Remote User",
@@ -40,21 +68,7 @@
         "regex_value": "^.*]: \\S+ - (\\S+)"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "HTTP Version",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 5,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "http_version",
-      "extractor_config": {
-        "regex_value": "^.*]:.+HTTP/(\\S+)\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Request Path",
@@ -73,21 +87,7 @@
         "regex_value": "^.*]:.+?\"\\S+ (\\S+).+\""
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "HTTP User Agent",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 8,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "http_user_agent",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ \\d+ \".+?\" \"(.+?)\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Response Status",
@@ -106,7 +106,21 @@
         "regex_value": "^.*]:.+?HTTP/\\S+\" (\\d+)"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
+    },
+    {
+      "title": "container_id",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "message",
+      "target_field": "container_id",
+      "extractor_config": {
+        "regex_value": "^.*?/.*?/(.*?)\\["
+      },
+      "condition_type": "none",
+      "condition_value": ""
     },
     {
       "title": "Response Bytes",
@@ -125,7 +139,7 @@
         "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ (\\d+)"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Request Timestamp",
@@ -146,7 +160,7 @@
         "regex_value": "^.*]:.+?\\[(.+?)\\]"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "HTTP Referer",
@@ -160,63 +174,7 @@
         "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ \\d+ \"(.+?)\""
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "container_id",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "container_id",
-      "extractor_config": {
-        "regex_value": "^.*?/.*?/(.*?)\\["
-      },
-      "condition_type": "none",
-      "condition_value": ""
-    },
-    {
-      "title": "source",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "container_image",
-      "target_field": "source",
-      "extractor_config": {
-        "regex_value": "(.*)"
-      },
-      "condition_type": "none",
-      "condition_value": ""
-    },
-    {
-      "title": "container_image",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "container_image",
-      "extractor_config": {
-        "regex_value": "^(.*?)/"
-      },
-      "condition_type": "none",
-      "condition_value": ""
-    },
-    {
-      "title": "container_name",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "container_name",
-      "extractor_config": {
-        "regex_value": "^.*?/(.*?)/"
-      },
-      "condition_type": "none",
-      "condition_value": ""
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "Message",
@@ -230,183 +188,7 @@
         "regex_value": "nginx:.+?\\\"(\\S+.+HTTP\\/\\S+)\\\" \\d+"
       },
       "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Remote User",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 1,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "remote_user",
-      "extractor_config": {
-        "regex_value": "^.*]: \\S+ - (\\S+)"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Remote Address",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "remote_addr",
-      "extractor_config": {
-        "regex_value": "^.*]:\\s+(\\S+)"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Request Timestamp",
-      "extractor_type": "regex",
-      "converters": [
-        {
-          "type": "date",
-          "config": {
-            "date_format": "dd/MMM/YYYY:HH:mm:ss Z"
-          }
-        }
-      ],
-      "order": 2,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "timestamp",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?\\[(.+?)\\]"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Request Verb",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 3,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "request_verb",
-      "extractor_config": {
-        "regex_value": "^.*]:.+\\[.+\\] \"(\\S+)"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "HTTP Version",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 5,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "http_version",
-      "extractor_config": {
-        "regex_value": "^.*]:.+HTTP/(\\S+)\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Request Path",
-      "extractor_type": "regex",
-      "converters": [
-        {
-          "type": "numeric",
-          "config": {}
-        }
-      ],
-      "order": 4,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "request_path",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?\"\\S+ (\\S+).+\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Response Bytes",
-      "extractor_type": "regex",
-      "converters": [
-        {
-          "type": "numeric",
-          "config": {}
-        }
-      ],
-      "order": 7,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "response_bytes",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ (\\d+)"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "Response Status",
-      "extractor_type": "regex",
-      "converters": [
-        {
-          "type": "numeric",
-          "config": {}
-        }
-      ],
-      "order": 6,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "response_status",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?HTTP/\\S+\" (\\d+)"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "HTTP Referer",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 9,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "http_referer",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ \\d+ \"(.+?)\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "HTTP User Agent",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 8,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "http_user_agent",
-      "extractor_config": {
-        "regex_value": "^.*]:.+?HTTP/\\S+\" \\d+ \\d+ \".+?\" \"(.+?)\""
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
-    },
-    {
-      "title": "container_id",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 0,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "container_id",
-      "extractor_config": {
-        "regex_value": "^.*?/.*?/(.*?)\\["
-      },
-      "condition_type": "none",
-      "condition_value": ""
+      "condition_value": "^((?!error).)*$"
     },
     {
       "title": "container_name",
@@ -435,20 +217,6 @@
       },
       "condition_type": "none",
       "condition_value": ""
-    },
-    {
-      "title": "Message",
-      "extractor_type": "regex",
-      "converters": [],
-      "order": 13,
-      "cursor_strategy": "copy",
-      "source_field": "message",
-      "target_field": "message",
-      "extractor_config": {
-        "regex_value": "nginx:.+?\\\"(\\S+.+HTTP\\/\\S+)\\\" \\d+"
-      },
-      "condition_type": "regex",
-      "condition_value": "^.*]:"
     },
     {
       "title": "source",
@@ -463,7 +231,98 @@
       },
       "condition_type": "none",
       "condition_value": ""
+    },
+    {
+      "title": "nginx_error_message",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_message",
+      "extractor_config": {
+        "regex_value": "^.*\\]\\ (.*?),"
+      },
+      "condition_type": "string",
+      "condition_value": "error"
+    },
+    {
+      "title": "nginx_error_timestamp",
+      "extractor_type": "regex",
+      "converters": [
+        {
+          "type": "date",
+          "config": {
+            "date_format": "dd/MMM/YYYY:HH:mm:ss Z"
+          }
+        }
+      ],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_timestamp",
+      "extractor_config": {
+        "regex_value": "^.*:\\ (.*?)\\ \\["
+      },
+      "condition_type": "string",
+      "condition_value": "error"
+    },
+    {
+      "title": "nginx_error_server",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_server",
+      "extractor_config": {
+        "regex_value": "^.*server:\\ (.*?),"
+      },
+      "condition_type": "string",
+      "condition_value": "error"
+    },
+    {
+      "title": "nginx_error_client",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_client",
+      "extractor_config": {
+        "regex_value": "^.*client:\\ (.*?),"
+      },
+      "condition_type": "string",
+      "condition_value": "error"
+    },
+    {
+      "title": "nginx_error_request",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_request",
+      "extractor_config": {
+        "regex_value": "^.*request:\\ \\\"(.*?)\\\""
+      },
+      "condition_type": "string",
+      "condition_value": "error"
+    },
+    {
+      "title": "nginx_error_host",
+      "extractor_type": "regex",
+      "converters": [],
+      "order": 0,
+      "cursor_strategy": "copy",
+      "source_field": "full_message",
+      "target_field": "nginx_error_host",
+      "extractor_config": {
+        "regex_value": "^.*host:\\ \\\"(.*?)\\\""
+      },
+      "condition_type": "string",
+      "condition_value": "error"
     }
   ],
-  "version": "2.0.0-SNAPSHOT"
+  "version": "2.1.0-SNAPSHOT"
 }

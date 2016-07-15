@@ -2,6 +2,7 @@
 
 echo "Health check registered in the Consul API"
 echo "======================================="
+echo 'curl -s http://localhost:8500/v1/health/service/nginx-demo | jq .'
 curl -s http://localhost:8500/v1/health/service/nginx-demo | jq .
 echo ""
 
@@ -17,7 +18,7 @@ echo ""
 
 echo "Decrease notification send time"
 echo "======================================="
-echo 'curl -s -X PUT -H 'Content-Type: application/json' -d "30" http://localhost:8500/v1/kv/consul-alerts/config/checks/change-threshold; echo ""'
+echo 'curl -s -X PUT -H 'Content-Type: application/json' -d "30" http://localhost:8500/v1/kv/consul-alerts/config/checks/change-threshold'
 curl -s -X PUT -H 'Content-Type: application/json' -d "30" http://localhost:8500/v1/kv/consul-alerts/config/checks/change-threshold; echo ""
 echo ""
 
