@@ -1,0 +1,26 @@
+version: '2'
+services:
+    app:
+      image: nginx:latest
+      environment:
+        - "SERVICE_80_NAME=scale-demo"
+        - "SERVICE_80_CHECK_SCRIPT=curl --silent http://localhost:$$SERVICE_PORT/status | grep OK"
+        - "SERVICE_80_CHECK_INTERVAL=10s"
+      volumes:
+        - "./nginx:/usr/share/nginx/html"
+      logging:
+        driver: syslog
+        options:
+          syslog-address: "tcp+tls://localhost:1514"
+          syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
+          syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
+          syslog-tls-key: "/Users/ahromis/workspace/docker-demo/tls/syslog/key.pem"
+          syslog-tls-skip-verify: "false"
+          tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
+      ports:
+        - 80
+
+networks:
+  default:
+    external:
+      name: alerts_default

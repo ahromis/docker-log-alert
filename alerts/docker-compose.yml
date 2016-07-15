@@ -18,6 +18,7 @@ services:
       network_mode: "host"
       command: start --consul-addr=localhost:8500 --consul-dc=dc1 --watch-checks
       depends_on:
+        - "registrator"
         - "consul"
     app:
       image: nginx:latest
