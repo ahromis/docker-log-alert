@@ -16,19 +16,17 @@ services:
     consul-alerts:
       image: acaleph/consul-alerts:latest
       network_mode: "host"
-      #command: start --log-level=debug --consul-addr=localhost:8500 --consul-dc=dc1 --watch-checks
       command: start --consul-addr=localhost:8500 --consul-dc=dc1 --watch-checks
       depends_on:
         - "consul"
     app:
       image: nginx:latest
       environment:
-        - "SERVICE_NAME=nginx-demo"
+        - "SERVICE_80_NAME=nginx-demo"
         - "SERVICE_80_CHECK_SCRIPT=curl --silent http://$$SERVICE_IP:$$SERVICE_PORT/status | grep OK"
         - "SERVICE_80_CHECK_INTERVAL=10s"
       volumes:
-        - "./nginx/status:/usr/share/nginx/html/status"
-        - "./nginx/status.html:/usr/share/nginx/html/status.html"
+        - "./nginx:/usr/share/nginx/html"
       logging:
         driver: syslog
         options:
