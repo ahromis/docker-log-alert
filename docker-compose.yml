@@ -23,7 +23,7 @@ services:
         - mongo
         - elasticsearch
       ports:
-        - "9000:9000"
+        - "9001:9000"
         - "12900:12900"
         - "12201/tcp:12201/tcp"
         - "1514/tcp:1514/tcp"

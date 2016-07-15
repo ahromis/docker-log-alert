@@ -13,6 +13,13 @@ services:
         - "/var/run/docker.sock:/tmp/docker.sock"
       depends_on:
         - "consul"
+    consul-alerts:
+      image: acaleph/consul-alerts:latest
+      network_mode: "host"
+      #command: start --log-level=debug --consul-addr=localhost:8500 --consul-dc=dc1 --watch-checks
+      command: start --consul-addr=localhost:8500 --consul-dc=dc1 --watch-checks
+      depends_on:
+        - "consul"
     app:
       image: nginx:latest
       environment:
