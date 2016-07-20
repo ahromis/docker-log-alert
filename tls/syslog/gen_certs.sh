@@ -5,11 +5,22 @@ cn=$2
 
 if [ ! ${ca_pass} ]; then
     read -sp "Enter in your CA password: " ca_pass
+    while [ ! ${ca_pass} ]; do
+        echo "Note: You need to enter in a CA password."
+        read -sp "Enter in your CA password: " ca_pass
+        echo ""
+    done
     echo ""
 fi
 
 if [ ! ${cn} ]; then
     read -p "Enter in your certificate CN (Common Name): " cn
+    while [ ! ${cn} ]; do
+        echo "Note: You need to enter in a certificate Common Name."
+        read -p "Enter in your certificate CN (Common Name): " cn
+        echo ""
+    done
+    echo ""
 fi
 
 echo 'Creating CA (ca-key.pem, ca.pem)'

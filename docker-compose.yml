@@ -27,19 +27,6 @@ services:
         - "12900:12900"
         - "12201/tcp:12201/tcp"
         - "1514/tcp:1514/tcp"
-    app:
-      image: nginx:latest
-      logging:
-        driver: syslog
-        options:
-          syslog-address: "tcp+tls://localhost:1514"
-          syslog-tls-ca-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/ca.pem"
-          syslog-tls-cert: "/Users/ahromis/workspace/docker-demo/tls/syslog/cert.pem"
-          syslog-tls-key: "/Users/ahromis/workspace/docker-demo/tls/syslog/key.pem"
-          syslog-tls-skip-verify: "false"
-          tag: "{{.ImageName}}/{{.Name}}/{{.ID}}"
-      ports:
-        - 8080:80
 
 volumes:
     mongo-data:

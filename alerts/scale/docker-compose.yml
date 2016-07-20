@@ -20,7 +20,7 @@ services:
       ports:
         - 80
 
-networks:
-  default:
-    external:
-      name: alerts_default
+#networks:
+#  default:
+#    external:
+#      name: alerts_default
