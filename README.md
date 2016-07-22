@@ -9,7 +9,7 @@ This repository is a simple demo to showcase a couple of things using Docker.
 
 1. Generate the Syslog certs: `./docker-log-alert/tls/syslog/gen_certs.sh` (follow the prompts)
 2. `EXTERNAL_IP=<host IP> docker-compose up -d` ... the EXTERNAL_IP is IP or address this is running on. For the client-side Graylog API calls.
-3. Connect to graylog: `http://<EXTERNAL_IP>:9001`
+3. Connect to graylog: `http://<EXTERNAL_IP>:9001` User: admin Pass: admin
    1. Go to "System/Input" -> "Content Packs" -> "Import Content Pack"
    2. Import the `./docker-log-alert/graylog/content_pack_nginx.json` content pack
    3. Under "Content Packs" click on "Web Servers" and then "Apply Content Pack"
