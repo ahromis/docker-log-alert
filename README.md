@@ -20,7 +20,6 @@ This repository is a simple demo to showcase a couple of things using Docker.
     1. From the `alerts` directory
     2. `docker build --rm -t consul-curl .`
     3. `docker run --rm --net=host consul-curl`
-7. Run `./curl.sh` then enter in your Slack Webhook URL as well as channel
 8. Scale the app `docker-compose scale app=10`
 9. Simulate a failure
     1. `cd nginx`
