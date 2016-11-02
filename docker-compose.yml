@@ -16,7 +16,7 @@ services:
         - ./graylog/config:/usr/share/graylog/data/config
         - ./tls/syslog:/etc/tls
       environment:
-        GRAYLOG_PASSWORD_SECRET: randomsalt
+        GRAYLOG_PASSWORD_SECRET: someverylongrandomsalt
         GRAYLOG_ROOT_PASSWORD_SHA2: 8c6976e5b5410415bde908bd4dee15dfb167a9c873fc4bb8a81f6f2ab448a918
         GRAYLOG_REST_TRANSPORT_URI: http://${EXTERNAL_IP}:12900
       depends_on:
